@@ -30,18 +30,11 @@ const Register = () => {
   });
   const history = useHistory();
 
-  console.log(errors);
-
   const onSubmit = async (values: RegisterFormFields) => {
     const { email, password } = values;
 
-    console.log(values);
-
     try {
-      const userCredential = await fb
-        .auth()
-        .createUserWithEmailAndPassword(email, password);
-      console.log(userCredential);
+      await fb.auth().createUserWithEmailAndPassword(email, password);
     } catch (error) {
       console.log(error);
     }
