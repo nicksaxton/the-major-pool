@@ -1,11 +1,17 @@
 import * as React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import {
+    BrowserRouter as Router,
+    Redirect,
+    Route,
+    Switch
+} from 'react-router-dom';
 
 import { AuthContext } from './context/AuthProvider';
 
+import useEntries from './hooks/useEntries';
+
 import Entries from './pages/Entries';
 import ForgotPassword from './pages/ForgotPassword';
-import Home from './pages/Home';
 import Layout from './components/Layout';
 import Leaderboard from './pages/Leaderboard';
 import LogIn from './pages/LogIn';
@@ -16,6 +22,7 @@ import ResetPassword from './pages/ResetPassword';
 
 const App = () => {
     const { verifying } = React.useContext(AuthContext);
+    const { entriesLocked } = useEntries();
 
     if (verifying) {
         return null;
@@ -48,7 +55,9 @@ const App = () => {
                             <Leaderboard />
                         </ProtectedRoute>
                         <ProtectedRoute path="/">
-                            <Home />
+                            <Redirect
+                                to={entriesLocked ? '/leaderboard' : '/entries'}
+                            />
                         </ProtectedRoute>
                     </Switch>
                 </Layout>

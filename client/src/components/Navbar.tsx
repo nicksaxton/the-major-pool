@@ -41,13 +41,6 @@ const Navbar = () => {
                         <Link
                             className="navbar-item"
                             onClick={handleItemClick}
-                            to="/"
-                        >
-                            Home
-                        </Link>
-                        <Link
-                            className="navbar-item"
-                            onClick={handleItemClick}
                             to="/leaderboard"
                         >
                             Leaderboard
