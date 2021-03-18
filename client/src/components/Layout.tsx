@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import Navbar from './Navbar';
+import Notification from './Notification';
 
 type LayoutProps = {
     children: React.ReactNode;
@@ -9,7 +10,8 @@ type LayoutProps = {
 const Layout = ({ children }: LayoutProps) => (
     <div>
         <Navbar />
-        <div className="container p-5">{children}</div>
+        <Notification />
+        <div className="container px-5">{children}</div>
     </div>
 );
 

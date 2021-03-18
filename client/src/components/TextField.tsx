@@ -4,12 +4,16 @@ import { FieldError } from 'react-hook-form';
 
 type TextFieldProps = {
     error?: FieldError;
+    inputSize?: 'small' | 'normal' | 'medium' | 'large';
     label?: string;
     name: string;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
 const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
-    ({ error, label, name, type = 'text', ...props }, ref) => {
+    (
+        { error, inputSize = 'large', label, name, type = 'text', ...props },
+        ref
+    ) => {
         return (
             <div className="field">
                 {label && (
@@ -19,7 +23,7 @@ const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
                 )}
                 <div className="control">
                     <input
-                        className={classNames('input is-large', {
+                        className={classNames(`input is-${inputSize}`, {
                             'is-danger': error
                         })}
                         id={name}

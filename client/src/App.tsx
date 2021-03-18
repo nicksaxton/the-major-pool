@@ -3,9 +3,13 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import { AuthContext } from './context/AuthProvider';
 
+import Entries from './pages/Entries';
 import ForgotPassword from './pages/ForgotPassword';
+import Home from './pages/Home';
 import Layout from './components/Layout';
+import Leaderboard from './pages/Leaderboard';
 import LogIn from './pages/LogIn';
+import ManageEntry from './pages/ManageEntry';
 import ProtectedRoute from './components/ProtectedRoute';
 import Register from './pages/Register';
 import ResetPassword from './pages/ResetPassword';
@@ -33,7 +37,20 @@ const App = () => {
                     <ResetPassword />
                 </Route>
                 <Layout>
-                    <ProtectedRoute path="/">Test</ProtectedRoute>
+                    <Switch>
+                        <ProtectedRoute path="/entries/:id">
+                            <ManageEntry />
+                        </ProtectedRoute>
+                        <ProtectedRoute path="/entries">
+                            <Entries />
+                        </ProtectedRoute>
+                        <ProtectedRoute path="/leaderboard">
+                            <Leaderboard />
+                        </ProtectedRoute>
+                        <ProtectedRoute path="/">
+                            <Home />
+                        </ProtectedRoute>
+                    </Switch>
                 </Layout>
             </Switch>
         </Router>

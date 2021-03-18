@@ -7,31 +7,49 @@ type AuthProviderProps = {
     children: React.ReactNode;
 };
 
-type AuthAction = {
-    type: 'LOG_IN' | 'LOG_OUT';
-    payload?: any;
+type Profile = {
+    admin: boolean;
+    firstName: string;
+    lastName: string;
 };
 
 interface AuthContextInterface {
     auth?: User;
-    update: (action: AuthAction) => void;
+    profile?: Profile;
     verifying: boolean;
 }
 
 const AuthContext = React.createContext<AuthContextInterface>({
     auth: undefined,
-    update: (action: AuthAction) => {},
+    profile: undefined,
     verifying: false
 });
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
     const [auth, setAuth] = React.useState<User | undefined>(undefined);
+    const [profile, setProfile] = React.useState<Profile | undefined>(
+        undefined
+    );
     const [verifying, setVerifying] = React.useState(true);
 
     React.useEffect(() => {
-        fb.auth().onAuthStateChanged((user) => {
+        fb.auth().onAuthStateChanged(async (user) => {
             if (user) {
                 setAuth(user);
+
+                try {
+                    setProfile(
+                        (await (
+                            await fb
+                                .firestore()
+                                .collection('users')
+                                .doc(user.uid)
+                                .get()
+                        ).data()) as Profile
+                    );
+                } catch (error) {
+                    console.error(error);
+                }
             } else {
                 setAuth(undefined);
             }
@@ -40,14 +58,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         });
     }, []);
 
-    const update = (action: AuthAction) => {
-        if (action.type === 'LOG_IN') {
-            setAuth(action.payload);
-        }
-    };
-
     return (
-        <AuthContext.Provider value={{ auth, update, verifying }}>
+        <AuthContext.Provider value={{ auth, profile, verifying }}>
             {children}
         </AuthContext.Provider>
     );
