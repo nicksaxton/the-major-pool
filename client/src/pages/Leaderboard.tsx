@@ -1,12 +1,29 @@
 import classNames from 'classnames';
 import * as React from 'react';
-import { Link, useLocation, useRouteMatch } from 'react-router-dom';
+import {
+    Link,
+    Route,
+    Switch,
+    useLocation,
+    useRouteMatch
+} from 'react-router-dom';
+
+import useEntries from '../hooks/useEntries';
+import useUsers from '../hooks/useUsers';
+
+import LeaderboardTable from '../components/LeaderboardTable';
+import Loader from '../components/Loader';
 
 const Leaderboard = () => {
     const { path } = useRouteMatch();
     const { pathname } = useLocation();
 
-    console.log(pathname);
+    const { entries, loadingEntries } = useEntries();
+    const { loadingUsers, userMap } = useUsers();
+
+    if (loadingEntries || loadingUsers) {
+        return <Loader />;
+    }
 
     return (
         <>
@@ -52,6 +69,42 @@ const Leaderboard = () => {
                     </li>
                 </ul>
             </div>
+            <Switch>
+                <Route path={`${path}/masters`}>
+                    <LeaderboardTable
+                        entries={entries}
+                        type="masters"
+                        userMap={userMap}
+                    />
+                </Route>
+                <Route path={`${path}/open`}>
+                    <LeaderboardTable
+                        entries={entries}
+                        type="open"
+                        userMap={userMap}
+                    />
+                </Route>
+                <Route path={`${path}/pga`}>
+                    <LeaderboardTable
+                        entries={entries}
+                        type="pga"
+                        userMap={userMap}
+                    />
+                </Route>
+                <Route path={`${path}/us`}>
+                    <LeaderboardTable
+                        entries={entries}
+                        type="us"
+                        userMap={userMap}
+                    />
+                </Route>
+                <Route path={`${path}`}>
+                    <p>
+                        Overall scoring will start after the start of the PGA
+                        Championship.
+                    </p>
+                </Route>
+            </Switch>
         </>
     );
 };

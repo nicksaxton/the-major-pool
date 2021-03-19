@@ -20,6 +20,7 @@ import usLogo from '../images/us.png';
 import Loader from '../components/Loader';
 import TextField from '../components/TextField';
 import TournamentPicks from '../components/TournamentPicks';
+import { Entry } from '../types';
 
 const manageEntrySchema = z.object({
     masters: z
@@ -50,6 +51,7 @@ const ManageEntry = () => {
     const { id: entryId } = useParams<{ id: string }>();
 
     const [loading, setLoading] = React.useState(true);
+    const [invalidEntry, setInvalidEntry] = React.useState(false);
 
     const { entriesLocked } = useEntries();
 
@@ -107,8 +109,15 @@ const ManageEntry = () => {
                     .collection('entries')
                     .doc(entryId)
                     .get();
+
+                const entry = data.data() as Entry;
+
+                if (!entry || entry.userId !== userId) {
+                    setInvalidEntry(true);
+                }
+
                 reset({
-                    ...data.data()
+                    ...entry
                 });
             } catch (error) {
                 console.error(error);
@@ -221,7 +230,7 @@ const ManageEntry = () => {
         }
     };
 
-    if (entriesLocked) {
+    if (entriesLocked || invalidEntry) {
         return <Redirect to="/entries" />;
     }
 

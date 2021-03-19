@@ -56,7 +56,11 @@ const App = () => {
                         </ProtectedRoute>
                         <ProtectedRoute path="/">
                             <Redirect
-                                to={entriesLocked ? '/leaderboard' : '/entries'}
+                                to={
+                                    entriesLocked
+                                        ? '/leaderboard/masters'
+                                        : '/entries'
+                                }
                             />
                         </ProtectedRoute>
                     </Switch>
