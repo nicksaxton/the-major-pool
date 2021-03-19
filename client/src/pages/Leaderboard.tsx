@@ -100,8 +100,8 @@ const Leaderboard = () => {
                 </Route>
                 <Route path={`${path}`}>
                     <p>
-                        Overall scoring will start after the start of the PGA
-                        Championship.
+                        Overall scoring will start after the opening round of
+                        the PGA Championship.
                     </p>
                 </Route>
             </Switch>
