@@ -46,7 +46,9 @@ type ManageEntryFormFields = z.infer<typeof manageEntrySchema>;
 
 const ManageEntry = () => {
     const { name, userId } = useAuth();
-    const { setSuccessMessage } = React.useContext(NotificationContext);
+    const { setErrorMessage, setSuccessMessage } = React.useContext(
+        NotificationContext
+    );
     const history = useHistory();
     const { id: entryId } = useParams<{ id: string }>();
 
@@ -196,6 +198,10 @@ const ManageEntry = () => {
                 duplicateName.size > 0 &&
                 duplicateName.docs[0].id !== entryId
             ) {
+                window.scrollTo(0, 0);
+                setErrorMessage(
+                    'An entry with this name already exists. Please choose a different name for your entry.'
+                );
                 throw new Error(
                     'An entry with this name already exists. Please choose a different name for your entry.'
                 );

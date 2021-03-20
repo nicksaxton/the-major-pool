@@ -10,8 +10,10 @@ type LayoutProps = {
 const Layout = ({ children }: LayoutProps) => (
     <div>
         <Navbar />
-        <Notification />
-        <div className="container px-5">{children}</div>
+        <div className="container px-5">
+            <Notification />
+            {children}
+        </div>
     </div>
 );
 
