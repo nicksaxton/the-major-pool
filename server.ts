@@ -1,5 +1,6 @@
 import axios from 'axios';
 import express from 'express';
+import path from 'path';
 
 const app = express();
 
@@ -26,6 +27,8 @@ type LeaderboardResponse = {
         golfers: GolferScore[];
     };
 };
+
+app.use(express.static(path.join(__dirname, 'client/build')));
 
 app.get('/date', (req, res) => {
     const now = new Date();
@@ -99,7 +102,7 @@ app.get('/us', async (req, res) => {
 });
 
 app.get('*', (req, res) => {
-    res.json('Test');
+    res.sendFile(path.join(__dirname, '/client/build/index.html'));
 });
 
 const port = process.env.PORT || 5000;

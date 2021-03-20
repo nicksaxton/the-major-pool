@@ -121,6 +121,8 @@ typings/
 .nuxt
 dist
 
+server.js
+
 # Storybook build outputs
 .out
 .storybook-out
