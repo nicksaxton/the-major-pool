@@ -10,6 +10,26 @@ const useEntries = () => {
     const [entriesLocked, setEntriesLocked] = React.useState(false);
     const [loadingEntries, setLoadingEntries] = React.useState(true);
 
+    const getEntries = async () => {
+        try {
+            setLoadingEntries(true);
+
+            const currentEntries: Entry[] = [];
+            const result = await fb.firestore().collection('entries').get();
+            result.forEach((entry) => {
+                currentEntries.push({
+                    ...entry.data(),
+                    entryId: entry.id
+                } as Entry);
+            });
+            setEntries(currentEntries);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoadingEntries(false);
+        }
+    };
+
     React.useEffect(() => {
         const getDate = async () => {
             try {
@@ -24,24 +44,6 @@ const useEntries = () => {
             }
         };
 
-        const getEntries = async () => {
-            try {
-                const currentEntries: Entry[] = [];
-                const result = await fb.firestore().collection('entries').get();
-                result.forEach((entry) => {
-                    currentEntries.push({
-                        ...entry.data(),
-                        entryId: entry.id
-                    } as Entry);
-                });
-                setEntries(currentEntries);
-            } catch (error) {
-                console.error(error);
-            } finally {
-                setLoadingEntries(false);
-            }
-        };
-
         getDate();
         getEntries();
     }, []);
@@ -49,6 +51,7 @@ const useEntries = () => {
     return {
         entries,
         entriesLocked,
+        getEntries,
         loadingEntries
     };
 };
