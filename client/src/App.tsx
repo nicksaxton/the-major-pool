@@ -10,6 +10,7 @@ import { AuthContext } from './context/AuthProvider';
 
 import useEntries from './hooks/useEntries';
 
+import Administrator from './pages/Administrator';
 import Entries from './pages/Entries';
 import ForgotPassword from './pages/ForgotPassword';
 import Layout from './components/Layout';
@@ -45,6 +46,9 @@ const App = () => {
                 </Route>
                 <Layout>
                     <Switch>
+                        <ProtectedRoute path="/administrator">
+                            <Administrator />
+                        </ProtectedRoute>
                         <ProtectedRoute path="/entries/:id">
                             <ManageEntry />
                         </ProtectedRoute>

@@ -260,7 +260,9 @@ const ManageEntry = () => {
                 </div>
             </div>
             <div className="field">
-                <label className="label">Picks</label>
+                <label className="label">
+                    Picks (Select four golfers per tournament)
+                </label>
                 <div className="columns">
                     <div className="column">
                         <TournamentPicks

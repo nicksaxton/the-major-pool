@@ -58,7 +58,7 @@ const Navbar = () => {
                             <Link
                                 className="navbar-item"
                                 onClick={handleItemClick}
-                                to="/admin"
+                                to="/administrator"
                             >
                                 Administrator
                             </Link>
