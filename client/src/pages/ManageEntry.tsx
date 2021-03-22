@@ -260,9 +260,13 @@ const ManageEntry = () => {
                 </div>
             </div>
             <div className="field">
-                <label className="label">
-                    Picks (Select four golfers per tournament)
-                </label>
+                <label className="label">Picks</label>
+                <p className="mb-2">
+                    Please select four golfers for each major. You may only pick
+                    a particular golfer once. For example, if you select Tiger
+                    Woods for The Masters, you cannot also select Tiger Woods
+                    for the U.S. Open.
+                </p>
                 <div className="columns">
                     <div className="column">
                         <TournamentPicks
