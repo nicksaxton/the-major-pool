@@ -1,31 +1,39 @@
 export type Entry = {
-    entryId: string;
-    masters: number[];
-    name: string;
-    open: number[];
-    pga: number[];
-    us: number[];
-    userId: string;
+  entryId: string;
+  masters: number[];
+  name: string;
+  open: number[];
+  pga: number[];
+  us: number[];
+  userId: string;
 };
 
 export type Golfer = {
-    currentRank: number;
-    firstName: string;
-    golferId: number;
-    imageUrl: string;
-    lastName: string;
+  currentRank: number;
+  firstName: string;
+  golferId: number;
+  imageUrl: string;
+  lastName: string;
 };
 
 export type Golfers = {
-    [key: string]: Golfer;
+  [key: string]: Golfer;
 };
 
+export enum TournamentType {
+  Masters = 'masters',
+  Open = 'open',
+  Overall = 'overall',
+  PGA = 'pga',
+  US = 'us',
+}
+
 export type User = {
-    firstName: string;
-    lastName: string;
-    userId: string;
+  firstName: string;
+  lastName: string;
+  userId: string;
 };
 
 export type UserMap = {
-    [key: string]: User;
+  [key: string]: User;
 };
