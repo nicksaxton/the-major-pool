@@ -25,7 +25,7 @@ export enum TournamentType {
   Open = 'open',
   Overall = 'overall',
   PGA = 'pga',
-  US = 'us',
+  US = 'us'
 }
 
 export type User = {
@@ -36,4 +36,19 @@ export type User = {
 
 export type UserMap = {
   [key: string]: User;
+};
+
+export type ScoresResponse = {
+  cutScore: number;
+  scoreMap: GolferScoreMap;
+};
+
+export type GolferScore = {
+  golferId: number;
+  overallPar: number;
+  status: string;
+};
+
+export type GolferScoreMap = {
+  [golferId: number]: GolferScore;
 };

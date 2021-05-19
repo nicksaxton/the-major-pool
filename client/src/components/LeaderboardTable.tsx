@@ -1,24 +1,15 @@
 import axios from 'axios';
 import * as React from 'react';
 
-import { Entry, TournamentType, UserMap } from '../types';
+import {
+  Entry,
+  GolferScoreMap,
+  ScoresResponse,
+  TournamentType,
+  UserMap
+} from '../types';
 
 import Loader from './Loader';
-
-type GolferScore = {
-  golferId: number;
-  overallPar: number;
-  status: string;
-};
-
-type GolferScoreMap = {
-  [golferId: number]: GolferScore;
-};
-
-type ScoresResponse = {
-  cutScore: number;
-  scoreMap: GolferScoreMap;
-};
 
 type LeaderboardTableProps = {
   entries: Entry[];
@@ -29,7 +20,7 @@ type LeaderboardTableProps = {
 const LeaderboardTable = ({
   entries,
   type,
-  userMap,
+  userMap
 }: LeaderboardTableProps) => {
   const [cutScore, setCutScore] = React.useState(0);
   const [loadingScores, setLoadingScores] = React.useState(true);
@@ -64,7 +55,7 @@ const LeaderboardTable = ({
 
           return {
             ...entry,
-            totalScore,
+            totalScore
           };
         })
         .sort((a, b) => a.totalScore - b.totalScore)
@@ -92,7 +83,7 @@ const LeaderboardTable = ({
 
           return {
             ...entry,
-            place: placeText,
+            place: placeText
           };
         });
     } else {

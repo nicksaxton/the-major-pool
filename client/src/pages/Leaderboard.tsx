@@ -5,7 +5,7 @@ import {
   Route,
   Switch,
   useLocation,
-  useRouteMatch,
+  useRouteMatch
 } from 'react-router-dom';
 
 import useEntries from '../hooks/useEntries';
@@ -14,6 +14,7 @@ import useUsers from '../hooks/useUsers';
 import LeaderboardTable from '../components/LeaderboardTable';
 import Loader from '../components/Loader';
 import { TournamentType } from '../types';
+import { OverallLeaderboard } from '../components/OverallLeaderboard';
 
 const Leaderboard = () => {
   const { path } = useRouteMatch();
@@ -35,35 +36,35 @@ const Leaderboard = () => {
         <ul>
           <li
             className={classNames({
-              'is-active': pathname === '/leaderboard',
+              'is-active': pathname === '/leaderboard'
             })}
           >
             <Link to={path}>Overall</Link>
           </li>
           <li
             className={classNames({
-              'is-active': pathname === '/leaderboard/masters',
+              'is-active': pathname === '/leaderboard/masters'
             })}
           >
             <Link to={`${path}/masters`}>The Masters</Link>
           </li>
           <li
             className={classNames({
-              'is-active': pathname === '/leaderboard/pga',
+              'is-active': pathname === '/leaderboard/pga'
             })}
           >
             <Link to={`${path}/pga`}>PGA Championship</Link>
           </li>
           <li
             className={classNames({
-              'is-active': pathname === '/leaderboard/us',
+              'is-active': pathname === '/leaderboard/us'
             })}
           >
             <Link to={`${path}/us`}>U.S. Open</Link>
           </li>
           <li
             className={classNames({
-              'is-active': pathname === '/leaderboard/open',
+              'is-active': pathname === '/leaderboard/open'
             })}
           >
             <Link to={`${path}/open`}>The Open Championship</Link>
@@ -72,11 +73,7 @@ const Leaderboard = () => {
       </div>
       <Switch>
         <Route path={`${path}/masters`}>
-          <LeaderboardTable
-            entries={entries}
-            type={TournamentType.Masters}
-            userMap={userMap}
-          />
+          <OverallLeaderboard type={TournamentType.Masters} />
         </Route>
         <Route path={`${path}/open`}>
           <LeaderboardTable
@@ -86,11 +83,7 @@ const Leaderboard = () => {
           />
         </Route>
         <Route path={`${path}/pga`}>
-          <LeaderboardTable
-            entries={entries}
-            type={TournamentType.PGA}
-            userMap={userMap}
-          />
+          <OverallLeaderboard type={TournamentType.PGA} />
         </Route>
         <Route path={`${path}/us`}>
           <LeaderboardTable
@@ -100,10 +93,7 @@ const Leaderboard = () => {
           />
         </Route>
         <Route path={`${path}`}>
-          <p>
-            Overall scoring will start after the opening round of the PGA
-            Championship.
-          </p>
+          <OverallLeaderboard type={TournamentType.Overall} />
         </Route>
       </Switch>
     </>
