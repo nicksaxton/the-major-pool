@@ -1,29 +1,12 @@
 import axios from 'axios';
 import React from 'react';
 
-import { Entry, ScoresResponse, TournamentType } from '../types';
+import { RankedEntry, ScoresResponse, TournamentType } from '../types';
 import Loader from './Loader';
 import useEntries from '../hooks/useEntries';
 import useUsers from '../hooks/useUsers';
-
-type RankedEntry = {
-  overallScore: number;
-  place: string;
-} & Entry;
-
-const formatScore = (score: number): string => {
-  if (score > 0) {
-    return '+' + score;
-  } else if (score === 0) {
-    return 'E';
-  }
-
-  return String(score);
-};
-
-const cellStyle = {
-  verticalAlign: 'middle'
-};
+import { LeaderboardRow } from './LeaderboardRow';
+import useGolfers from '../hooks/useGolfers';
 
 type Props = {
   type: TournamentType;
@@ -31,6 +14,7 @@ type Props = {
 
 export const OverallLeaderboard = ({ type }: Props) => {
   const { entries, loadingEntries } = useEntries();
+  const { golfers, loadingGolfers } = useGolfers();
 
   const [loadingScores, setLoadingScores] = React.useState(true);
   const [mastersScoreData, setMastersScoreData] =
@@ -127,12 +111,12 @@ export const OverallLeaderboard = ({ type }: Props) => {
       });
   }, [entries, mastersScoreData, pgaScoreData, type]);
 
-  if (loadingEntries || loadingScores || loadingUsers) {
+  if (loadingEntries || loadingScores || loadingUsers || loadingGolfers) {
     return <Loader />;
   }
 
   return (
-    <table className="table is-fullwidth is-narrow is-striped">
+    <table className="table is-fullwidth is-narrow is-striped is-hoverable is-clickable">
       <thead>
         <tr>
           <th className="has-text-centered">Place</th>
@@ -141,24 +125,22 @@ export const OverallLeaderboard = ({ type }: Props) => {
         </tr>
       </thead>
       <tbody>
-        {rankedEntries.map((entry, index) => (
-          <tr key={entry.entryId}>
-            <td
-              className="has-text-centered is-size-4"
-              style={{ ...cellStyle, textAlign: 'center' }}
-            >
-              {entry.place}
-            </td>
-            <td style={cellStyle}>
-              {entry.name}&nbsp;
-              <span className="has-text-grey">{`(${
-                userMap[entry.userId].firstName
-              } ${userMap[entry.userId].lastName})`}</span>
-            </td>
-            <td className="is-size-3 has-text-centered">
-              {formatScore(entry.overallScore)}
-            </td>
-          </tr>
+        {rankedEntries.map((entry) => (
+          <LeaderboardRow
+            cutScores={{
+              masters: mastersScoreData?.cutScore,
+              pga: pgaScoreData?.cutScore
+            }}
+            entry={entry}
+            golfers={golfers}
+            key={entry.entryId}
+            scoreMap={{
+              masters: mastersScoreData?.scoreMap,
+              pga: pgaScoreData?.scoreMap
+            }}
+            type={type}
+            userMap={userMap}
+          />
         ))}
       </tbody>
     </table>

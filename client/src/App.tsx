@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {
-    BrowserRouter as Router,
-    Redirect,
-    Route,
-    Switch
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch
 } from 'react-router-dom';
 
 import { AuthContext } from './context/AuthProvider';
@@ -22,56 +22,50 @@ import Register from './pages/Register';
 import ResetPassword from './pages/ResetPassword';
 
 const App = () => {
-    const { verifying } = React.useContext(AuthContext);
-    const { entriesLocked } = useEntries();
+  const { verifying } = React.useContext(AuthContext);
+  const { entriesLocked } = useEntries();
 
-    if (verifying) {
-        return null;
-    }
+  if (verifying) {
+    return null;
+  }
 
-    return (
-        <Router>
-            <Switch>
-                <Route path="/login">
-                    <LogIn />
-                </Route>
-                <Route path="/password">
-                    <ForgotPassword />
-                </Route>
-                <Route path="/register">
-                    <Register />
-                </Route>
-                <Route path="/reset_password">
-                    <ResetPassword />
-                </Route>
-                <Layout>
-                    <Switch>
-                        <ProtectedRoute path="/administrator">
-                            <Administrator />
-                        </ProtectedRoute>
-                        <ProtectedRoute path="/entries/:id">
-                            <ManageEntry />
-                        </ProtectedRoute>
-                        <ProtectedRoute path="/entries">
-                            <Entries />
-                        </ProtectedRoute>
-                        <ProtectedRoute path="/leaderboard">
-                            <Leaderboard />
-                        </ProtectedRoute>
-                        <ProtectedRoute path="/">
-                            <Redirect
-                                to={
-                                    entriesLocked
-                                        ? '/leaderboard/masters'
-                                        : '/entries'
-                                }
-                            />
-                        </ProtectedRoute>
-                    </Switch>
-                </Layout>
-            </Switch>
-        </Router>
-    );
+  return (
+    <Router>
+      <Switch>
+        <Route path="/login">
+          <LogIn />
+        </Route>
+        <Route path="/password">
+          <ForgotPassword />
+        </Route>
+        <Route path="/register">
+          <Register />
+        </Route>
+        <Route path="/reset_password">
+          <ResetPassword />
+        </Route>
+        <Layout>
+          <Switch>
+            <ProtectedRoute path="/administrator">
+              <Administrator />
+            </ProtectedRoute>
+            <ProtectedRoute path="/entries/:id">
+              <ManageEntry />
+            </ProtectedRoute>
+            <ProtectedRoute path="/entries">
+              <Entries />
+            </ProtectedRoute>
+            <ProtectedRoute path="/leaderboard">
+              <Leaderboard />
+            </ProtectedRoute>
+            <ProtectedRoute path="/">
+              <Redirect to={entriesLocked ? '/leaderboard/pga' : '/entries'} />
+            </ProtectedRoute>
+          </Switch>
+        </Layout>
+      </Switch>
+    </Router>
+  );
 };
 
 export default App;

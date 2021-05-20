@@ -52,3 +52,8 @@ export type GolferScore = {
 export type GolferScoreMap = {
   [golferId: number]: GolferScore;
 };
+
+export type RankedEntry = {
+  overallScore: number;
+  place: string;
+} & Entry;
