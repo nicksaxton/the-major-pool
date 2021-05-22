@@ -76,7 +76,8 @@ export const LeaderboardRow = ({
             name: `${golfers[pick].firstName} ${golfers[pick].lastName}`,
             overallPar: pgaScores[pick]
               ? pgaScores[pick].overallPar
-              : (cutScores.pga || 0) + 1
+              : (cutScores.pga || 0) + 1,
+            status: pgaScores[pick] ? pgaScores[pick].status : 'DNP'
           };
         })
         .sort((a, b) => a.overallPar - b.overallPar);
@@ -117,8 +118,12 @@ export const LeaderboardRow = ({
                     {mastersGolfers.map((golfer) => (
                       <tr
                         className={`${golfer.status ? 'has-text-danger' : ''}`}
+                        key={`${entry.entryId}_${golfer.golferId}`}
                       >
-                        <td>{golfer.name}</td>
+                        <td>
+                          {golfer.name}&nbsp;
+                          {golfer.status ? `(${golfer.status})` : ''}
+                        </td>
                         <td className="has-text-centered">
                           {formatScore(golfer.overallPar)}
                         </td>
@@ -144,8 +149,12 @@ export const LeaderboardRow = ({
                     {pgaGolfers.map((golfer) => (
                       <tr
                         className={`${golfer.status ? 'has-text-danger' : ''}`}
+                        key={`${entry.entryId}_${golfer.golferId}`}
                       >
-                        <td>{golfer.name}</td>
+                        <td>
+                          {golfer.name}&nbsp;
+                          {golfer.status ? `(${golfer.status})` : ''}
+                        </td>
                         <td className="has-text-centered">
                           {formatScore(golfer.overallPar)}
                         </td>

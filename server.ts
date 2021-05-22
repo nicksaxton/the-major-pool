@@ -55,14 +55,14 @@ const processScores = (data: LeaderboardResponse) => {
     const { overallPar, status } = golfer;
 
     // Keep track of the highest non-cut score
-    if (status !== 'Cut') {
+    if (!status) {
       cutScore = overallPar;
     }
 
     scoreMap[golfer.golferId] = {
       golferId: golfer.golferId,
       overallPar: status ? cutScore + 1 : overallPar,
-      status,
+      status
     };
   });
 
