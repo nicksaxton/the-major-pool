@@ -91,11 +91,7 @@ export const OverallLeaderboard = ({ type }: Props) => {
         let place = '';
 
         if (index === 0) {
-          if (entry.overallScore === allEntries[index + 1].overallScore) {
-            place = 'T1';
-          } else {
-            place = '1';
-          }
+          place = '1';
         } else {
           if (entry.overallScore === allEntries[index - 1].overallScore) {
             place = allEntries[index - 1].place;
