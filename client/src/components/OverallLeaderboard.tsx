@@ -21,6 +21,8 @@ export const OverallLeaderboard = ({ type }: Props) => {
     React.useState<ScoresResponse | null>(null);
   const [pgaScoreData, setPGAScoreData] =
     React.useState<ScoresResponse | null>(null);
+  const [usScoreData, setUSScoreData] =
+    React.useState<ScoresResponse | null>(null);
 
   const { loadingUsers, userMap } = useUsers();
 
@@ -35,6 +37,9 @@ export const OverallLeaderboard = ({ type }: Props) => {
 
         const { data: pgaData } = await axios.get<ScoresResponse>(`/pga`);
         setPGAScoreData(pgaData);
+
+        const { data: usData } = await axios.get<ScoresResponse>(`/us`);
+        setUSScoreData(usData);
       } finally {
         if (mounted) {
           setLoadingScores(false);
@@ -53,7 +58,8 @@ export const OverallLeaderboard = ({ type }: Props) => {
     if (
       entries.length === 0 ||
       mastersScoreData === null ||
-      pgaScoreData === null
+      pgaScoreData === null ||
+      usScoreData === null
     ) {
       return [];
     }
@@ -77,6 +83,13 @@ export const OverallLeaderboard = ({ type }: Props) => {
             return (total += pick
               ? pick.overallPar
               : pgaScoreData.cutScore + 1);
+          }, 0);
+        }
+
+        if (type === 'overall' || type === 'us') {
+          overallScore += entry.us.reduce((total, golferID) => {
+            const pick = usScoreData.scoreMap[golferID];
+            return (total += pick ? pick.overallPar : usScoreData.cutScore + 1);
           }, 0);
         }
 
@@ -105,7 +118,7 @@ export const OverallLeaderboard = ({ type }: Props) => {
           place
         };
       });
-  }, [entries, mastersScoreData, pgaScoreData, type]);
+  }, [entries, mastersScoreData, pgaScoreData, type, usScoreData]);
 
   if (loadingEntries || loadingScores || loadingUsers || loadingGolfers) {
     return <Loader />;
@@ -125,14 +138,16 @@ export const OverallLeaderboard = ({ type }: Props) => {
           <LeaderboardRow
             cutScores={{
               masters: mastersScoreData?.cutScore,
-              pga: pgaScoreData?.cutScore
+              pga: pgaScoreData?.cutScore,
+              us: usScoreData?.cutScore
             }}
             entry={entry}
             golfers={golfers}
             key={entry.entryId}
             scoreMap={{
               masters: mastersScoreData?.scoreMap,
-              pga: pgaScoreData?.scoreMap
+              pga: pgaScoreData?.scoreMap,
+              us: usScoreData?.scoreMap
             }}
             type={type}
             userMap={userMap}

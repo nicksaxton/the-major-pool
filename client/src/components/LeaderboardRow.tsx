@@ -12,12 +12,14 @@ interface Props {
   cutScores: {
     masters?: number;
     pga?: number;
+    us?: number;
   };
   entry: RankedEntry;
   golfers: Golfers;
   scoreMap: {
     masters?: GolferScoreMap;
     pga?: GolferScoreMap;
+    us?: GolferScoreMap;
   };
   type: TournamentType;
   userMap: UserMap;
@@ -78,6 +80,26 @@ export const LeaderboardRow = ({
               ? pgaScores[pick].overallPar
               : (cutScores.pga || 0) + 1,
             status: pgaScores[pick] ? pgaScores[pick].status : 'DNP'
+          };
+        })
+        .sort((a, b) => a.overallPar - b.overallPar);
+    } else {
+      return [];
+    }
+  }, [cutScores, entry, golfers, scoreMap]);
+
+  const usGolfers = React.useMemo(() => {
+    const usScores = scoreMap.us;
+    if (usScores) {
+      return entry.us
+        .map((pick) => {
+          return {
+            ...usScores[pick],
+            name: `${golfers[pick].firstName} ${golfers[pick].lastName}`,
+            overallPar: usScores[pick]
+              ? usScores[pick].overallPar
+              : (cutScores.us || 0) + 1,
+            status: usScores[pick] ? usScores[pick].status : 'DNP'
           };
         })
         .sort((a, b) => a.overallPar - b.overallPar);
@@ -147,6 +169,37 @@ export const LeaderboardRow = ({
                 >
                   <tbody>
                     {pgaGolfers.map((golfer) => (
+                      <tr
+                        className={`${golfer.status ? 'has-text-danger' : ''}`}
+                        key={`${entry.entryId}_${golfer.golferId}`}
+                      >
+                        <td>
+                          {golfer.name}&nbsp;
+                          {golfer.status ? `(${golfer.status})` : ''}
+                        </td>
+                        <td className="has-text-centered">
+                          {formatScore(golfer.overallPar)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </>
+            )}
+
+            {(type === TournamentType.US ||
+              type === TournamentType.Overall) && (
+              <>
+                {type === TournamentType.Overall && (
+                  <p className="mb-0 is-size-7 mt-3">US Open</p>
+                )}
+                <table
+                  className={`table is-bordered is-fullwidth is-narrow ${
+                    type !== TournamentType.Overall ? 'mt-3' : ''
+                  }`}
+                >
+                  <tbody>
+                    {usGolfers.map((golfer) => (
                       <tr
                         className={`${golfer.status ? 'has-text-danger' : ''}`}
                         key={`${entry.entryId}_${golfer.golferId}`}
