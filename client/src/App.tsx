@@ -59,7 +59,7 @@ const App = () => {
               <Leaderboard />
             </ProtectedRoute>
             <ProtectedRoute path="/">
-              <Redirect to={entriesLocked ? '/leaderboard/us' : '/entries'} />
+              <Redirect to={entriesLocked ? '/leaderboard/open' : '/entries'} />
             </ProtectedRoute>
           </Switch>
         </Layout>

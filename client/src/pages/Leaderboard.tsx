@@ -76,11 +76,7 @@ const Leaderboard = () => {
           <OverallLeaderboard type={TournamentType.Masters} />
         </Route>
         <Route path={`${path}/open`}>
-          <LeaderboardTable
-            entries={entries}
-            type={TournamentType.Open}
-            userMap={userMap}
-          />
+          <OverallLeaderboard type={TournamentType.Open} />
         </Route>
         <Route path={`${path}/pga`}>
           <OverallLeaderboard type={TournamentType.PGA} />
