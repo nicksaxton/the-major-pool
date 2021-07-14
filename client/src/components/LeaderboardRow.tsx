@@ -11,6 +11,7 @@ import {
 interface Props {
   cutScores: {
     masters?: number;
+    open?: number;
     pga?: number;
     us?: number;
   };
@@ -18,6 +19,7 @@ interface Props {
   golfers: Golfers;
   scoreMap: {
     masters?: GolferScoreMap;
+    open?: GolferScoreMap;
     pga?: GolferScoreMap;
     us?: GolferScoreMap;
   };
@@ -60,6 +62,25 @@ export const LeaderboardRow = ({
             overallPar: mastersScores[pick]
               ? mastersScores[pick].overallPar
               : (cutScores.masters || 0) + 1
+          };
+        })
+        .sort((a, b) => a.overallPar - b.overallPar);
+    } else {
+      return [];
+    }
+  }, [cutScores, entry, golfers, scoreMap]);
+
+  const openGolfers = React.useMemo(() => {
+    const openScores = scoreMap.open;
+    if (openScores) {
+      return entry.open
+        .map((pick) => {
+          return {
+            ...openScores[pick],
+            name: `${golfers[pick].firstName} ${golfers[pick].lastName}`,
+            overallPar: openScores[pick]
+              ? openScores[pick].overallPar
+              : (cutScores.open || 0) + 1
           };
         })
         .sort((a, b) => a.overallPar - b.overallPar);
@@ -200,6 +221,37 @@ export const LeaderboardRow = ({
                 >
                   <tbody>
                     {usGolfers.map((golfer) => (
+                      <tr
+                        className={`${golfer.status ? 'has-text-danger' : ''}`}
+                        key={`${entry.entryId}_${golfer.golferId}`}
+                      >
+                        <td>
+                          {golfer.name}&nbsp;
+                          {golfer.status ? `(${golfer.status})` : ''}
+                        </td>
+                        <td className="has-text-centered">
+                          {formatScore(golfer.overallPar)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </>
+            )}
+
+            {(type === TournamentType.Open ||
+              type === TournamentType.Overall) && (
+              <>
+                {type === TournamentType.Overall && (
+                  <p className="mb-0 is-size-7 mt-3">The Open Championship</p>
+                )}
+                <table
+                  className={`table is-bordered is-fullwidth is-narrow ${
+                    type !== TournamentType.Overall ? 'mt-3' : ''
+                  }`}
+                >
+                  <tbody>
+                    {openGolfers.map((golfer) => (
                       <tr
                         className={`${golfer.status ? 'has-text-danger' : ''}`}
                         key={`${entry.entryId}_${golfer.golferId}`}

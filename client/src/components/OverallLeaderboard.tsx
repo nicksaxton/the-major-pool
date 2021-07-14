@@ -19,10 +19,14 @@ export const OverallLeaderboard = ({ type }: Props) => {
   const [loadingScores, setLoadingScores] = React.useState(true);
   const [mastersScoreData, setMastersScoreData] =
     React.useState<ScoresResponse | null>(null);
-  const [pgaScoreData, setPGAScoreData] =
+  const [openScoreData, setOpenScoreData] =
     React.useState<ScoresResponse | null>(null);
-  const [usScoreData, setUSScoreData] =
-    React.useState<ScoresResponse | null>(null);
+  const [pgaScoreData, setPGAScoreData] = React.useState<ScoresResponse | null>(
+    null
+  );
+  const [usScoreData, setUSScoreData] = React.useState<ScoresResponse | null>(
+    null
+  );
 
   const { loadingUsers, userMap } = useUsers();
 
@@ -34,6 +38,9 @@ export const OverallLeaderboard = ({ type }: Props) => {
           `/masters`
         );
         setMastersScoreData(mastersData);
+
+        const { data: openData } = await axios.get<ScoresResponse>(`/open`);
+        setOpenScoreData(openData);
 
         const { data: pgaData } = await axios.get<ScoresResponse>(`/pga`);
         setPGAScoreData(pgaData);
@@ -58,6 +65,7 @@ export const OverallLeaderboard = ({ type }: Props) => {
     if (
       entries.length === 0 ||
       mastersScoreData === null ||
+      openScoreData === null ||
       pgaScoreData === null ||
       usScoreData === null
     ) {
@@ -74,6 +82,15 @@ export const OverallLeaderboard = ({ type }: Props) => {
             return (total += pick
               ? pick.overallPar
               : mastersScoreData.cutScore + 1);
+          }, 0);
+        }
+
+        if (type === 'overall' || type === 'open') {
+          overallScore += entry.open.reduce((total, golferID) => {
+            const pick = openScoreData.scoreMap[golferID];
+            return (total += pick
+              ? pick.overallPar
+              : openScoreData.cutScore + 1);
           }, 0);
         }
 
@@ -118,7 +135,14 @@ export const OverallLeaderboard = ({ type }: Props) => {
           place
         };
       });
-  }, [entries, mastersScoreData, pgaScoreData, type, usScoreData]);
+  }, [
+    entries,
+    mastersScoreData,
+    openScoreData,
+    pgaScoreData,
+    type,
+    usScoreData
+  ]);
 
   if (loadingEntries || loadingScores || loadingUsers || loadingGolfers) {
     return <Loader />;
@@ -138,6 +162,7 @@ export const OverallLeaderboard = ({ type }: Props) => {
           <LeaderboardRow
             cutScores={{
               masters: mastersScoreData?.cutScore,
+              open: openScoreData?.cutScore,
               pga: pgaScoreData?.cutScore,
               us: usScoreData?.cutScore
             }}
@@ -146,6 +171,7 @@ export const OverallLeaderboard = ({ type }: Props) => {
             key={entry.entryId}
             scoreMap={{
               masters: mastersScoreData?.scoreMap,
+              open: openScoreData?.scoreMap,
               pga: pgaScoreData?.scoreMap,
               us: usScoreData?.scoreMap
             }}
